@@ -3,11 +3,8 @@
  */
 package imghunter;
 
-import java.awt.Color;
-import java.awt.Component;
 import java.awt.GridLayout;
 import java.awt.Image;
-import java.awt.Label;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.ResourceMap;
 import org.jdesktop.application.SingleFrameApplication;
@@ -20,6 +17,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 import javax.swing.Timer;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -37,7 +35,7 @@ import org.jfree.chart.ChartUtilities;
  */
 public class ImgHunterView extends FrameView {
 
-    private GreyImage image;
+    private MyImage image;
     private SketchFrame sketchFrame;
 
     public ImgHunterView(SingleFrameApplication app) {
@@ -125,6 +123,7 @@ public class ImgHunterView extends FrameView {
         mainPanel = new javax.swing.JPanel();
         jlblImg = new javax.swing.JLabel();
         srclImgs = new java.awt.ScrollPane();
+        jlblHist = new javax.swing.JLabel();
         menuBar = new javax.swing.JMenuBar();
         javax.swing.JMenu fileMenu = new javax.swing.JMenu();
         javax.swing.JMenuItem exitMenuItem = new javax.swing.JMenuItem();
@@ -148,15 +147,20 @@ public class ImgHunterView extends FrameView {
 
         jlblImg.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
+        jlblHist.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+
         javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
         mainPanel.setLayout(mainPanelLayout);
         mainPanelLayout.setHorizontalGroup(
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(mainPanelLayout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mainPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jlblImg, javax.swing.GroupLayout.PREFERRED_SIZE, 215, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(srclImgs, javax.swing.GroupLayout.DEFAULT_SIZE, 462, Short.MAX_VALUE)
+                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jlblHist, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 685, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, mainPanelLayout.createSequentialGroup()
+                        .addComponent(jlblImg, javax.swing.GroupLayout.PREFERRED_SIZE, 215, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(srclImgs, javax.swing.GroupLayout.DEFAULT_SIZE, 460, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         mainPanelLayout.setVerticalGroup(
@@ -165,7 +169,9 @@ public class ImgHunterView extends FrameView {
                 .addContainerGap()
                 .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jlblImg, javax.swing.GroupLayout.PREFERRED_SIZE, 215, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(srclImgs, javax.swing.GroupLayout.DEFAULT_SIZE, 431, Short.MAX_VALUE))
+                    .addComponent(srclImgs, javax.swing.GroupLayout.DEFAULT_SIZE, 504, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jlblHist, javax.swing.GroupLayout.PREFERRED_SIZE, 295, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -276,7 +282,8 @@ public class ImgHunterView extends FrameView {
 
     private void gerarHistMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_gerarHistMenuItemActionPerformed
         // TODO add your handling code here:
-        BufferedImage img = this.image.getGrey();
+        BufferedImage img = this.image.getImg();
+
 
         if (img != null) {
 
@@ -288,6 +295,13 @@ public class ImgHunterView extends FrameView {
 
             try {
                 ChartUtilities.saveChartAsJPEG(new File("histograma.JPG"), hist.getChart(), 800, 600);
+                img = ImageIO.read(new File("histograma.JPG"));
+
+                ImageIcon icon = new ImageIcon(MyImage.resizeImage
+                        (img, jlblHist.getWidth(), jlblHist.getHeight()));
+
+                jlblHist.setIcon(icon);
+
             } catch (IOException ex) {
                 Logger.getLogger(ImgHunterView.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -311,24 +325,20 @@ public class ImgHunterView extends FrameView {
                 //carrega a foto selecionada pelo usuario
 
                 File f = this.jfcimgChooser.getSelectedFile();
-                image = new GreyImage(f.getAbsolutePath());
+                image = new MyImage(f.getAbsolutePath());
 
-                Image img = resizeImage(image.getGrey());
+                //ajusta tamanho da imagem
+                Image img = MyImage.resizeImage(image.getImg(), jlblImg.getWidth(),
+                        jlblImg.getHeight());
 
                 ImageIcon icon = new ImageIcon(img);
                 jlblImg.setIcon(icon);
 
                 JPanel p = new JPanel(new GridLayout(5,2,5,5));
-
                 srclImgs.add(p);
 
-
                 for(int i = 0; i < 10; i++ )
-                {
                     p.add(new JLabel(icon));
-
-                }
-
 
             } catch (IOException ex) {
                 Logger.getLogger(ImgHunterView.class.getName()).log(Level.SEVERE, null, ex);
@@ -338,16 +348,13 @@ public class ImgHunterView extends FrameView {
 
     private void BWMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BWMenuItemActionPerformed
         this.image.GerarTonsDeCinza();
-
-        ImageIcon icon = new ImageIcon(image.getGrey());
+        ImageIcon icon = new ImageIcon(image.getImg());
         jlblImg.setIcon(icon);
     }//GEN-LAST:event_BWMenuItemActionPerformed
 
     private void loadSketchMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadSketchMenuItemActionPerformed
-
         this.sketchFrame = new SketchFrame(this.jlblImg);
-        sketchFrame.setVisible(true);
-        
+        sketchFrame.setVisible(true);       
     }//GEN-LAST:event_loadSketchMenuItemActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     javax.swing.JMenuItem BWMenuItem;
@@ -356,6 +363,7 @@ public class ImgHunterView extends FrameView {
     javax.swing.JMenuItem gerarHistMenuItem;
     javax.swing.JMenu imgMenu;
     javax.swing.JFileChooser jfcimgChooser;
+    public javax.swing.JLabel jlblHist;
     public javax.swing.JLabel jlblImg;
     javax.swing.JMenuItem loadImgMenuItem;
     javax.swing.JMenuItem loadSketchMenuItem;
@@ -373,17 +381,4 @@ public class ImgHunterView extends FrameView {
     private final Icon[] busyIcons = new Icon[15];
     private int busyIconIndex = 0;
     private JDialog aboutBox;
-
-    private Image resizeImage(BufferedImage grey) {
-
-        if(grey.getWidth() == grey.getHeight())
-        return grey.getScaledInstance(this.jlblImg.getWidth(),
-                this.jlblImg.getHeight(), BufferedImage.SCALE_SMOOTH);
-        else if(grey.getWidth() > grey.getHeight())
-            return grey.getScaledInstance(this.jlblImg.getWidth(), -1,
-                    BufferedImage.SCALE_SMOOTH);
-        else return grey.getScaledInstance(-1, this.jlblImg.getWidth(),
-                    BufferedImage.SCALE_SMOOTH);
-     
-    }
 }
