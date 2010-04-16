@@ -13,16 +13,22 @@ package imghunter;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.GridLayout;
-import java.awt.Image;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import javax.imageio.ImageIO;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 
 /**
  *
  * @author eduardo
  */
 public class SketchFrame extends javax.swing.JFrame {
+
+    private BufferedImage sketch;
+    private final String sketchName = "sketch.jpg";
+    private final String sketchExtension = "jpg";
 
     private final int LAPIS = 0;
     private final int LINHA = 1;
@@ -48,6 +54,8 @@ public class SketchFrame extends javax.swing.JFrame {
     /** Creates new form SketchFrame */
     public SketchFrame(JLabel lbl) {
         initComponents();
+        this.sketch = new BufferedImage(this.jpnDraw.getWidth(),
+                this.jpnDraw.getHeight(), BufferedImage.TYPE_INT_RGB);
 
         mousey = 0;
         mousex = 0;
@@ -612,14 +620,20 @@ public class SketchFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jbtnLimparActionPerformed
 
     private void importMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_importMenuItemActionPerformed
-//
-//       Graphics g = this.jpnDraw.getGraphics();
-//       Image img = null;
-//       Graphics g2 = img.getGraphics();
-//       g2.
-       
 
-//        this.jpnDraw.getGraphics().drawImage(img, 0, 0, null);
+ //       Graphics g = this.sketch.createGraphics();
+ //       this.jpnDraw.paint(g);
+
+        try {
+           ImageIO.write(sketch, sketchExtension, new File(sketchName));
+
+        }catch(Exception E)
+        {
+            System.err.print("Erro ao importar imagem de rascunho: " + E.getMessage());
+            JOptionPane.showMessageDialog(this, null, "Erro ao importar Rascunho", 0);
+        }
+
+       // this.setVisible(false);
 
     }//GEN-LAST:event_importMenuItemActionPerformed
 
@@ -702,6 +716,7 @@ public class SketchFrame extends javax.swing.JFrame {
 
         Graphics g = this.jpnDraw.getGraphics();
         g.setColor(this.drawColor);
+
 
         if (this.initialDraw) {
             this.initialDraw = false;
