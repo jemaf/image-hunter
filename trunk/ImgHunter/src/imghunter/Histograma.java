@@ -4,8 +4,6 @@
  */
 package imghunter;
 
-import java.awt.Color;
-import java.awt.image.BufferedImage;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.plot.PlotOrientation;
@@ -18,10 +16,10 @@ import org.jfree.data.category.DefaultCategoryDataset;
 public class Histograma {
 
     private JFreeChart grafico;
-    private double[][] frequencia = new double[256][3];
-    private BufferedImage foto;
+    private int[][] frequencia = new int[256][3];
+    private MyImage foto;
 
-    public Histograma(BufferedImage img) {
+    public Histograma(MyImage img) {
         this.foto = img;
         this.grafico = this.criaChart();
     }//fim do construtor
@@ -30,24 +28,8 @@ public class Histograma {
         return this.grafico;
     }
 
-    /*
-     * Calcula frequencia dos 256 tons de cinza
-     */
-    private void calculaFrequencia() {
-
-        //armazena o valor de cada variavel no histograma
-        for (int x = 0; x < this.foto.getWidth(); x++) {
-            for (int y = 0; y < this.foto.getHeight(); y++) {
-                Color cor = new Color(this.foto.getRGB(x, y));
-                this.frequencia[cor.getRed()][0] += 1;
-                this.frequencia[cor.getGreen()][1] += 1;
-                this.frequencia[cor.getBlue()][2] += 1;
-            }//fim do for
-        }
-    }//fim do calculaFrequencia
-
     private JFreeChart criaChart() {
-        this.calculaFrequencia();
+        this.frequencia = this.foto.getFrequencia();
 
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 
@@ -72,13 +54,6 @@ public class Histograma {
                 );
         return chart;
     }//fim do criaChart
-
-    /**
-     * Equaliza o histograma
-     */
-    public void equalizarHistograma() {
-        //TODO
-    }
 
 }//fim da classe
 

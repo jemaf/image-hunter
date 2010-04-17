@@ -132,6 +132,7 @@ public class ImgHunterView extends FrameView {
         loadImgMenuItem = new javax.swing.JMenuItem();
         loadSketchMenuItem = new javax.swing.JMenuItem();
         BWMenuItem = new javax.swing.JMenuItem();
+        equalizarImgMenu = new javax.swing.JMenuItem();
         HistogramaMenu = new javax.swing.JMenu();
         gerarHistMenuItem = new javax.swing.JMenuItem();
         javax.swing.JMenu helpMenu = new javax.swing.JMenu();
@@ -169,7 +170,7 @@ public class ImgHunterView extends FrameView {
                 .addContainerGap()
                 .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jlblImg, javax.swing.GroupLayout.PREFERRED_SIZE, 215, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(srclImgs, javax.swing.GroupLayout.DEFAULT_SIZE, 504, Short.MAX_VALUE))
+                    .addComponent(srclImgs, javax.swing.GroupLayout.DEFAULT_SIZE, 502, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jlblHist, javax.swing.GroupLayout.PREFERRED_SIZE, 295, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -217,6 +218,14 @@ public class ImgHunterView extends FrameView {
         });
         imgMenu.add(BWMenuItem);
 
+        equalizarImgMenu.setText("Equalizar Imagem");
+        equalizarImgMenu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                equalizarImgMenuActionPerformed(evt);
+            }
+        });
+        imgMenu.add(equalizarImgMenu);
+
         menuBar.add(imgMenu);
 
         HistogramaMenu.setText("Histograma");
@@ -257,7 +266,7 @@ public class ImgHunterView extends FrameView {
             .addGroup(statusPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(statusMessageLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 527, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 525, Short.MAX_VALUE)
                 .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(statusAnimationLabel)
@@ -281,13 +290,11 @@ public class ImgHunterView extends FrameView {
     }// </editor-fold>//GEN-END:initComponents
 
     private void gerarHistMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_gerarHistMenuItemActionPerformed
-        // TODO add your handling code here:
-        BufferedImage img = this.image.getImg();
 
+        if (this.image.getImg() != null) {
 
-        if (img != null) {
-
-            Histograma hist = new Histograma(img);
+            Histograma hist = new Histograma(image);
+            BufferedImage img = this.image.getImg();
 
             final ChartPanel panel = new ChartPanel(hist.getChart());
             JFrame f = new JFrame("Histograma");
@@ -356,10 +363,18 @@ public class ImgHunterView extends FrameView {
         this.sketchFrame = new SketchFrame(this.jlblImg);
         sketchFrame.setVisible(true);       
     }//GEN-LAST:event_loadSketchMenuItemActionPerformed
+
+    private void equalizarImgMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_equalizarImgMenuActionPerformed
+
+        this.image.equalizar();
+
+    }//GEN-LAST:event_equalizarImgMenuActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     javax.swing.JMenuItem BWMenuItem;
     javax.swing.JMenu HistogramaMenu;
     javax.swing.JMenu abrirImgMenu;
+    javax.swing.JMenuItem equalizarImgMenu;
     javax.swing.JMenuItem gerarHistMenuItem;
     javax.swing.JMenu imgMenu;
     javax.swing.JFileChooser jfcimgChooser;
