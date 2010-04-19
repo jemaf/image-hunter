@@ -77,7 +77,7 @@ public class MyImage {
         }
     }
 
-        /**
+    /**
      * Equaliza o histograma
      */
     public void equalizar() {
@@ -130,14 +130,29 @@ public class MyImage {
 
         this.frequencia = freqEq;
 
-        //falta implementar, aplicar novos tons na imagem
+        //aplica novos tons a imagem
         for(int i = 0; i < this.image.getWidth(); i++)
             for(int k = 0; k < this.image.getHeight(); k++)
             {
                 Color cor = new Color(this.image.getRGB(i, k));
-            }
+                int r = this.frequencia[cor.getRed()][0];
+                int g = this.frequencia[cor.getGreen()][1];
+                int b = this.frequencia[cor.getBlue()][2];
 
+                Color newColor = new Color(r, g, b);
+                this.image.setRGB(i, k, newColor.getRGB());
+            }
     }
+
+    /**
+     * Calcula amostragem da imagem
+     */
+    public int[][] amostragem() {
+
+
+        return null;
+    }
+
 
         /*
      * Calcula frequencia dos 256 tons de cinza
