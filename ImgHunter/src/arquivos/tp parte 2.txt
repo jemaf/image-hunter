@@ -1,0 +1,22 @@
+TP - Marco 2
+27/04/2010 - Terça
+
+Para cada imagem dos 3 primeiros diretorios, extrair as seguintes informações:
+
+* Hisograma de cor (R,G,B)
+* amostragem (redução variável, mas vamos usar inicialmente por 8
+
+Não é para fazer 
+* MER
+* Perímetro
+* Área
+* Compacidade
+
+Implementar a busca por:
+* xadrez, euclidiana, city block, cosseno
+* mostrar todo o resultado ordenado do mais relevante para o menos relevante
+
+img1 = 256R, 256G, 256B, Amostragem 8, H, S, V, Y, U, V
+
+Deixar o usuairio escolher quais caracteristicas serao usadas na busca.
+Sugestão: usar checkbox
