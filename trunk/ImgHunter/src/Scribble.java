@@ -1,5 +1,3 @@
-package imghunter;
-
 /*
     Name: Scribbler version 0.0.1
     By Arash Partow
@@ -93,8 +91,6 @@ import java.awt.event.*;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseEvent;
 import java.lang.Math.*;
-import java.text.*;
-import java.io.*;
 import java.awt.Scrollbar.*;
 
 public class Scribble extends Applet implements ActionListener, AdjustmentListener, MouseListener, MouseMotionListener

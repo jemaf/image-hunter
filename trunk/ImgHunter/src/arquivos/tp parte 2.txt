@@ -4,7 +4,7 @@ TP - Marco 2
 Para cada imagem dos 3 primeiros diretorios, extrair as seguintes informações:
 
 * Hisograma de cor (R,G,B)
-* amostragem (redução variável, mas vamos usar inicialmente por 8
+* amostragem (redução variável, mas vamos usar inicialmente por 8)
 
 Não é para fazer 
 * MER
