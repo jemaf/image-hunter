@@ -18,12 +18,18 @@ import javax.imageio.ImageIO;
 public class MyImage {
 
     private BufferedImage image;
-    private int[][] frequencia;
+    private int[][] freqRGB;
+    private int[][] freqYUV;
+    private int[][] freqHSV;
 
     public MyImage(String imgOriginal) throws IOException {
+
         image = ImageIO.read(new File(imgOriginal));
-        this.frequencia = new int[256][3];
+        this.freqRGB = new int[256][3];
+        this.freqHSV = new int[256][3];
+        this.freqYUV = new int[256][3];
         this.calculaFrequencia();
+
     }
 
     /**
@@ -52,9 +58,8 @@ public class MyImage {
     }
 
     public int[][] getFrequencia() {
-        return this.frequencia;
+        return this.freqRGB;
     }
-
 
     /**
      * redimensiona a imagem
@@ -85,14 +90,14 @@ public class MyImage {
         int freqEq[][] = new int[256][3];
 
         // aplica a soma acumulada
-        for(int i = 0; i < frequencia.length; i++) {
+        for (int i = 0; i < freqRGB.length; i++) {
 
-            freqA[i][0] += i == 0 ? this.frequencia[i][0] :
-                this.frequencia[i][0] + freqA[i-1][0];
-            freqA[i][1] += i == 0 ? this.frequencia[i][1] :
-                this.frequencia[i][1] + freqA[i-1][1];
-            freqA[i][2] += i == 0 ? this.frequencia[i][2] :
-                this.frequencia[i][2] + freqA[i-1][2];
+            freqA[i][0] += i == 0 ? this.freqRGB[i][0]
+                    : this.freqRGB[i][0] + freqA[i - 1][0];
+            freqA[i][1] += i == 0 ? this.freqRGB[i][1]
+                    : this.freqRGB[i][1] + freqA[i - 1][1];
+            freqA[i][2] += i == 0 ? this.freqRGB[i][2]
+                    : this.freqRGB[i][2] + freqA[i - 1][2];
         }
 
         //define numero de pixels para cada cor
@@ -100,26 +105,29 @@ public class MyImage {
                 npB = freqA[freqA.length][2];
 
         //divide a frequencia pelo total d pixels e multiplica pelo numero de tons
-        for(int i = 0; i < frequencia.length; i++) {
-            freqA[i][0] = (int)(((double)freqA[i][0] / (double)(npR)) * (double)this.frequencia.length);
-            freqA[i][1] = (int)(((double)freqA[i][1] / (double)(npG)) * (double)this.frequencia.length);
-            freqA[i][2] = (int)(((double)freqA[i][2] / (double)(npB)) * (double)this.frequencia.length);
+        for (int i = 0; i < freqRGB.length; i++) {
+            freqA[i][0] = (int) (((double) freqA[i][0] / (double) (npR)) * (double) this.freqRGB.length);
+            freqA[i][1] = (int) (((double) freqA[i][1] / (double) (npG)) * (double) this.freqRGB.length);
+            freqA[i][2] = (int) (((double) freqA[i][2] / (double) (npB)) * (double) this.freqRGB.length);
         }
 
         //gera nova frequencia
-        for(int i = 0; i < freqEq.length; i++) {
+        for (int i = 0; i < freqEq.length; i++) {
 
             int newValR = 0;
             int newValG = 0;
             int newValB = 0;
 
-            for(int k = 0; k < freqA.length; k++) {
-                if(freqA[k][0] == i)
-                    newValR += this.frequencia[k][0];
-                if(freqA[k][1] == i)
-                    newValG += this.frequencia[k][1];
-                if(freqA[k][2] == i)
-                    newValB += this.frequencia[k][2];
+            for (int k = 0; k < freqA.length; k++) {
+                if (freqA[k][0] == i) {
+                    newValR += this.freqRGB[k][0];
+                }
+                if (freqA[k][1] == i) {
+                    newValG += this.freqRGB[k][1];
+                }
+                if (freqA[k][2] == i) {
+                    newValB += this.freqRGB[k][2];
+                }
             }
 
             freqEq[i][0] = newValR;
@@ -128,20 +136,20 @@ public class MyImage {
 
         }
 
-        this.frequencia = freqEq;
+        this.freqRGB = freqEq;
 
         //aplica novos tons a imagem
-        for(int i = 0; i < this.image.getWidth(); i++)
-            for(int k = 0; k < this.image.getHeight(); k++)
-            {
+        for (int i = 0; i < this.image.getWidth(); i++) {
+            for (int k = 0; k < this.image.getHeight(); k++) {
                 Color cor = new Color(this.image.getRGB(i, k));
-                int r = this.frequencia[cor.getRed()][0];
-                int g = this.frequencia[cor.getGreen()][1];
-                int b = this.frequencia[cor.getBlue()][2];
+                int r = this.freqRGB[cor.getRed()][0];
+                int g = this.freqRGB[cor.getGreen()][1];
+                int b = this.freqRGB[cor.getBlue()][2];
 
                 Color newColor = new Color(r, g, b);
                 this.image.setRGB(i, k, newColor.getRGB());
             }
+        }
     }
 
     /**
@@ -154,20 +162,50 @@ public class MyImage {
     }
 
 
-        /*
+    /*
      * Calcula frequencia dos 256 tons de cinza
      */
     private void calculaFrequencia() {
 
         //armazena o valor de cada variavel no histograma
-        for (int x = 0; x < this.image.getWidth(); x++) {
-            for (int y = 0; y < this.image.getHeight(); y++) {
-                Color cor = new Color(this.image.getRGB(x, y));
-                this.frequencia[cor.getRed()][0] += 1;
-                this.frequencia[cor.getGreen()][1] += 1;
-                this.frequencia[cor.getBlue()][2] += 1;
+        for (int j = 0; j < this.image.getWidth(); j++) {
+            for (int k = 0; k < this.image.getHeight(); k++) {
+                Color cor = new Color(this.image.getRGB(j, k));
+
+                int r = cor.getRed();
+                int g = cor.getGreen();
+                int b = cor.getBlue();
+
+                this.freqRGB[r][0] += 1;
+                this.freqRGB[g][1] += 1;
+                this.freqRGB[b][2] += 1;
+
+                int y = (int) ((0.2990 * r) + (0.5870 * g) + (0.1140 * b));
+                int u = (int) ((-0.1687 * r) + (-0.3313 * g) + (0.5000 * b));
+                int v = (int) ((0.5000 * r) + (-0.4187 * g) + (-0.0813 * b));
+
+                this.freqYUV[y][0] += 1;
+                this.freqYUV[u][1] += 1;
+                this.freqYUV[v][2] += 1;
+
+
             }//fim do for
         }
     }//fim do calculaFrequencia
 
+    public static void main(String args[]) {
+
+
+        int r = 0;
+        int b = 255;
+        int g = 0;
+
+        int y = (int) ((0.2990 * r) + (0.5870 * g) + (0.1140 * b));
+        int u = (int) ((-0.1687 * r) + (-0.3313 * g) + (0.5000 * b));
+        int v = (int) ((0.5000 * r) + (-0.4187 * g) + (-0.0813 * b));
+
+
+        System.out.println(y + "," + u + "," + v);
+
+    }
 }
