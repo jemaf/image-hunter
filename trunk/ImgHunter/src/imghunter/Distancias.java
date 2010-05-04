@@ -45,7 +45,7 @@ public class Distancias {
 	}
 	/**
 	 * calculaDistanciaCityBlock - dados dois vetores, calcula a 
-	 * dist�ncia cityBlock, que � a soma das diferencas absolutas
+	 * distância cityBlock, que é a soma das diferencas absolutas
 	 * entre todas as dimens�es.
 	 * 
 	 * @return - em caso de vetores com dimens�es diferentes, retorna null
@@ -64,5 +64,31 @@ public class Distancias {
 	}
 
 
+/**
+ * calculaDistanciaModeloVetorial - dados dois vetores
+ * calcula a distância entre eles utilizando o modelo
+ * vetorial
+ * 
+ *  @return - em caso de vetores com dimens�es diferentes, retorna null
+ */
+public Double calculaDistanciaModeloVetorial(Integer fig1[], Integer fig2[])
+        {
+        	Double dist = null, produtoEscalar = 0.0,
+                        modulofig1 = 0.0,modulofig2 = 0.0 ;
+		if(fig1.length == fig2.length)
+		{
+			dist = 0.0;
+			for(int i = 0; i< fig1.length; i++)
+                        {	produtoEscalar += (fig1[i] * fig2[i]);
+                                modulofig1 += fig1[i] * fig1[i];
+                                modulofig2 += fig2[i] * fig2[i];
+                                 }
+                    dist = produtoEscalar /((Math.sqrt(modulofig1)* Math.sqrt(modulofig2)));
+                    }
 
+                return dist;
+
+
+
+        }
 }
