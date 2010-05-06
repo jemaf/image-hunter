@@ -157,14 +157,14 @@ public class MyImage {
     /**
      * Calcula amostragem da imagem
      */
-    public Integer[] amostragem() {
+    public int[] amostragem() {
 
    int tamanhoVetor = this.image.getWidth() * this.image.getHeight();
    // se a imagem não for multipla de 8  "arredondar " o vetor
    tamanhoVetor += 8 - (tamanhoVetor % 8);
    // reduz o tamanho da representação em 8 vezes. Amostragem de 8.
    tamanhoVetor /= 8;
-   Integer amostragem[] = new Integer[tamanhoVetor];
+   int amostragem[] = new int[tamanhoVetor];
    // desencargo de conciência :) pra garantir todas as posições
    amostragem[tamanhoVetor-1] = 0;
    amostragem[tamanhoVetor-2] = 0;
@@ -292,6 +292,7 @@ public class MyImage {
         String rgb = "RGB:";
         String hsv = "HSV:";
         String yuv = "YUV:";
+        String amostragem = "AMOSTRAGEM:";
 
         for (int i = 0; i < this.freqRGB.length; i++) {
             rgb += String.format("%d,%d,%d", freqRGB[i][0], freqRGB[i][1], freqRGB[i][2]);
@@ -313,7 +314,15 @@ public class MyImage {
             }
         }
 
-        s = rgb + " " + hsv + " " + yuv;
+        int[] vetor = this.amostragem();
+
+        for(int i = 0; i < vetor.length; i++) {
+
+            amostragem += vetor[i];
+            if(i < vetor.length - 1) amostragem += ",";
+        }
+
+        s = rgb + " " + hsv + " " + yuv + " " + amostragem;
 
         return s;
     }
