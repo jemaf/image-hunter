@@ -157,10 +157,40 @@ public class MyImage {
     /**
      * Calcula amostragem da imagem
      */
-    public int[][] amostragem() {
+    public Integer[] amostragem() {
 
+   int tamanhoVetor = this.image.getWidth() * this.image.getHeight();
+   // se a imagem não for multipla de 8  "arredondar " o vetor
+   tamanhoVetor += 8 - (tamanhoVetor % 8);
+   // reduz o tamanho da representação em 8 vezes. Amostragem de 8.
+   tamanhoVetor /= 8;
+   Integer amostragem[] = new Integer[tamanhoVetor];
+   // desencargo de conciência :) pra garantir todas as posições
+   amostragem[tamanhoVetor-1] = 0;
+   amostragem[tamanhoVetor-2] = 0;
+   amostragem[tamanhoVetor-3] = 0;
+   amostragem[tamanhoVetor-4] = 0;
+   amostragem[tamanhoVetor-5] = 0;
+   amostragem[tamanhoVetor-6] = 0;
+   amostragem[tamanhoVetor-7] = 0;
 
-        return null;
+   // percorrer imagem e calcular a média a cada 8 pixels
+   int media = 0, cont = 0 ;
+   for (int i = 0; i < this.image.getWidth(); i++) {
+            for (int k = 0; k < this.image.getHeight(); k++) {
+                cont ++;
+                media += this.image.getRGB(i, k);
+                // a cada 8 pixels contabiliza a média(arredondada pra int)
+                if(cont==8)
+                {  amostragem[i+k] = (media/8);
+                   // reseta controladores
+                   cont  = 0;
+                   media = 0;
+                    }
+                }
+        }
+
+        return amostragem;
     }
 
 
