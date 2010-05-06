@@ -18,16 +18,18 @@ import javax.imageio.ImageIO;
 public class MyImage {
 
     private BufferedImage image;
+    private String imgOriginal;
     private int[][] freqRGB;
     private int[][] freqYUV;
     private int[][] freqHSV;
 
     public MyImage(String imgOriginal) throws IOException {
 
+        this.imgOriginal = imgOriginal;
         image = ImageIO.read(new File(imgOriginal));
         this.freqRGB = new int[256][3];
-        this.freqHSV = new int[256][3];
-        this.freqYUV = new int[256][3];
+        this.freqHSV = new int[image.getWidth() * image.getHeight()][3];
+        this.freqYUV = new int[image.getWidth() * image.getHeight()][3];
         this.calculaFrequencia();
 
     }
@@ -167,9 +169,11 @@ public class MyImage {
      */
     private void calculaFrequencia() {
 
+        int indice = 0;
+
         //armazena o valor de cada variavel no histograma
         for (int j = 0; j < this.image.getWidth(); j++) {
-            for (int k = 0; k < this.image.getHeight(); k++) {
+            for (int k = 0; k < this.image.getHeight(); k++, indice++) {
                 Color cor = new Color(this.image.getRGB(j, k));
 
                 int r = cor.getRed();
@@ -180,18 +184,109 @@ public class MyImage {
                 this.freqRGB[g][1] += 1;
                 this.freqRGB[b][2] += 1;
 
-                int y = (int) ((0.2990 * r) + (0.5870 * g) + (0.1140 * b));
-                int u = (int) ((-0.1687 * r) + (-0.3313 * g) + (0.5000 * b));
-                int v = (int) ((0.5000 * r) + (-0.4187 * g) + (-0.0813 * b));
-
-                this.freqYUV[y][0] += 1;
-                this.freqYUV[u][1] += 1;
-                this.freqYUV[v][2] += 1;
+                this.rgbParaHsv(r, g, b, freqHSV[indice]);
+                this.rgbParaYuv(r, g, b, this.freqYUV[indice]);
 
 
             }//fim do for
         }
     }//fim do calculaFrequencia
+
+    /*
+     * Calcula frequencia dos 256 tons de cinza
+     */
+    private void rgbParaYuv(int r, int g, int b, int yuv[]) {
+
+        int y = (int) (0.299 * r + 0.587 * g + 0.114 * b);
+        int u = (int) ((b - y) * 0.492f);
+        int v = (int) ((r - y) * 0.877f);
+
+        yuv[0] = y;
+        yuv[1] = u;
+        yuv[2] = v;
+
+//        System.out.println(yuv[0] + "," + yuv[1] + "," + yuv[2]);
+    }
+
+    private void rgbParaHsv(int r, int g, int b, int hsv[]) {
+
+        int min;    //Valor mínimo de RGB
+        int max;    //Valor máximo de RGB
+        int delMax; //Variação de RGB
+
+        if (r > g) {
+            min = g;
+            max = r;
+        } else {
+            min = r;
+            max = g;
+        }
+        if (b > max) {
+            max = b;
+        }
+        if (b < min) {
+            min = b;
+        }
+
+        delMax = max - min;
+
+        float H = 0, S;
+        float V = max;
+
+        if (delMax == 0) {
+            H = 0;
+            S = 0;
+        } else {
+            S = delMax / 255f;
+            if (r == max) {
+                H = ((g - b) / (float) delMax) * 60;
+            } else if (g == max) {
+                H = (2 + (b - r) / (float) delMax) * 60;
+            } else if (b == max) {
+                H = (4 + (r - g) / (float) delMax) * 60;
+            }
+        }
+
+        hsv[0] = (int) (H);
+        hsv[1] = (int) (S * 100);
+        hsv[2] = (int) (V * 100);
+
+        //       System.out.println(hsv[0] + "," + hsv[1] + "," + hsv[2]);
+    }
+
+    @Override
+    public String toString() {
+
+        String s = imgOriginal + " ";
+
+        String rgb = "RGB:";
+        String hsv = "HSV:";
+        String yuv = "YUV:";
+
+        for (int i = 0; i < this.freqRGB.length; i++) {
+            rgb += String.format("%d,%d,%d", freqRGB[i][0], freqRGB[i][1], freqRGB[i][2]);
+            hsv += String.format("%d,%d,%d", freqHSV[i][0], freqHSV[i][1], freqHSV[i][2]);
+            yuv += String.format("%d,%d,%d", freqYUV[i][0], freqYUV[i][1], freqYUV[i][2]);
+            if (i < freqRGB.length) {
+                rgb += "-";
+                hsv += "-";
+                yuv += "-";
+            }
+        }
+
+        for (int i = this.freqRGB.length; i < this.freqHSV.length; i++) {
+            hsv += String.format("%d,%d,%d", freqHSV[i][0], freqHSV[i][1], freqHSV[i][2]);
+            yuv += String.format("%d,%d,%d", freqYUV[i][0], freqYUV[i][1], freqYUV[i][2]);
+            if (i < freqRGB.length) {
+                hsv += "-";
+                yuv += "-";
+            }
+        }
+
+        s = rgb + " " + hsv + " " + yuv;
+
+        return s;
+    }
 
     public static void main(String args[]) {
 

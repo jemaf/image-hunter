@@ -29,7 +29,7 @@ public class SketchFrame extends javax.swing.JFrame {
     private BufferedImage sketch;
     private final String sketchName = "sketch.jpg";
     private final String sketchExtension = "jpg";
-
+    private Graphics myGraphics;
     private final int LAPIS = 0;
     private final int LINHA = 1;
     private final int RETANGULO = 2;
@@ -37,7 +37,6 @@ public class SketchFrame extends javax.swing.JFrame {
     private final int OVAL = 4;
     private final int FILL_OVAL = 5;
     private final int BORRACHA = 6;
-
     private int mousey;
     private int mousex;
     private int iniX;
@@ -47,10 +46,9 @@ public class SketchFrame extends javax.swing.JFrame {
     private int prevx;
     private int prevy;
     private Color drawColor;
-    private Color xorColor = new Color(255,255,255);
+    private Color xorColor = new Color(255, 255, 255);
 
-    private JLabel lbl;
-
+    // private JLabel lbl;
     /** Creates new form SketchFrame */
     public SketchFrame(JLabel lbl) {
         initComponents();
@@ -65,10 +63,13 @@ public class SketchFrame extends javax.swing.JFrame {
         iniX = 0;
         iniY = 0;
         diametroBorracha = 7;
+        this.lblFerrEscolhida.setText(this.jbtnLapis.getText());
+
+        myGraphics = this.sketch.createGraphics();
 
         this.drawColor = Color.BLACK;
 
-        this.lbl = lbl;
+        //  this.lbl = lbl;
     }
 
     /** This method is called from within the constructor to
@@ -475,6 +476,7 @@ public class SketchFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    //<editor-fold defaultstate="collapsed" desc="Eventos botoes">
     private void jbtnBlackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnBlackActionPerformed
         this.jbtnUser.setBackground(this.jbtnBlack.getBackground());
         drawColor = this.jbtnUser.getBackground();
@@ -532,11 +534,11 @@ public class SketchFrame extends javax.swing.JFrame {
         updateCoordText(evt.getX(), evt.getY());
     }//GEN-LAST:event_jpnDrawMouseClicked
 
+    // </editor-fold>
     private void jpnDrawMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jpnDrawMouseReleased
 
         this.updateCoordText(evt.getX(), evt.getY());
         int ferrSel = getFerramentaSelecionada(this.lblFerrEscolhida.getText());
-
 
         switch (ferrSel) {
             case LAPIS:
@@ -565,6 +567,7 @@ public class SketchFrame extends javax.swing.JFrame {
                 break;
         }
 
+        this.jpnDraw.paint(myGraphics);
 
     }//GEN-LAST:event_jpnDrawMouseReleased
 
@@ -614,29 +617,26 @@ public class SketchFrame extends javax.swing.JFrame {
 }//GEN-LAST:event_jbtnBorrachaActionPerformed
 
     private void jbtnLimparActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnLimparActionPerformed
-        Graphics g = this.jpnDraw.getGraphics();
-        g.setColor(Color.WHITE);
-        g.fillRect(0, 0, jpnDraw.getWidth(), jpnDraw.getHeight());
+        myGraphics.setColor(Color.WHITE);
+        myGraphics.fillRect(0, 0, jpnDraw.getWidth(), jpnDraw.getHeight());
     }//GEN-LAST:event_jbtnLimparActionPerformed
 
     private void importMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_importMenuItemActionPerformed
 
- //       Graphics g = this.sketch.createGraphics();
- //       this.jpnDraw.paint(g);
-
+        //       Graphics g = this.sketch.createGraphics();
+        //       this.jpnDraw.paint(g);
+        
         try {
-           ImageIO.write(sketch, sketchExtension, new File(sketchName));
+            ImageIO.write(sketch, sketchExtension, new File(sketchName));
 
-        }catch(Exception E)
-        {
+        } catch (Exception E) {
             System.err.print("Erro ao importar imagem de rascunho: " + E.getMessage());
             JOptionPane.showMessageDialog(this, null, "Erro ao importar Rascunho", 0);
         }
 
-       // this.setVisible(false);
+        // this.setVisible(false);
 
     }//GEN-LAST:event_importMenuItemActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuBar SketchMenuBar;
     private javax.swing.JMenuItem importMenuItem;
@@ -714,10 +714,8 @@ public class SketchFrame extends javax.swing.JFrame {
 
     private void drawLapis(MouseEvent e) {
 
+        Graphics myGraphics = this.sketch.getGraphics();
         Graphics g = this.jpnDraw.getGraphics();
-        g.setColor(this.drawColor);
-
-
         if (this.initialDraw) {
             this.initialDraw = false;
 
@@ -725,6 +723,7 @@ public class SketchFrame extends javax.swing.JFrame {
             mousey = e.getY();
             prevx = mousex;
             prevy = mousey;
+            myGraphics.drawLine(prevx, prevy, mousex, mousey);
             g.drawLine(prevx, prevy, mousex, mousey);
         }
 
@@ -733,47 +732,57 @@ public class SketchFrame extends javax.swing.JFrame {
             mousex = e.getX();
             mousey = e.getY();
 
+            myGraphics.drawLine(prevx, prevy, mousex, mousey);
             g.drawLine(prevx, prevy, mousex, mousey);
 
             prevx = mousex;
             prevy = mousey;
-
         }
+
+       
+
+        //Graphics g = this.jpnDraw.getGraphics();
+        //g.drawImage(sketch, 0, 0,this.sketch.getWidth(),this.sketch.getHeight(), this);
+       // jpnDraw.repaint();
+        g.dispose();
+        myGraphics.dispose();
+        
     }
 
     private void drawLinhas(MouseEvent e) {
-        Graphics g = jpnDraw.getGraphics();
-        g.setColor(this.drawColor);
+       
+        myGraphics.setColor(this.drawColor);
 
 
         if (initialDraw) {
             initialDraw = false;
-            g.setXORMode(xorColor);
+            myGraphics.setXORMode(xorColor);
 
             mousex = e.getX();
             mousey = e.getY();
             prevx = mousex;
             prevy = mousey;
-            g.drawLine(prevx, prevy, mousex, mousey);
+           myGraphics.drawLine(prevx, prevy, mousex, mousey);
 
         }
 
         if (mouseHasMoved(e)) {
 
-            g.setXORMode(xorColor);
-            g.drawLine(prevx, prevy, mousex, mousey);
+            myGraphics.setXORMode(xorColor);
+            myGraphics.drawLine(prevx, prevy, mousex, mousey);
 
             mousex = e.getX();
             mousey = e.getY();
 
-            g.drawLine(prevx, prevy, mousex, mousey);
+            myGraphics.drawLine(prevx, prevy, mousex, mousey);
         }
+
+        
     }
 
     private void drawRect(MouseEvent evt) {
 
-        Graphics g = jpnDraw.getGraphics();
-        g.setColor(this.drawColor);
+        myGraphics.setColor(this.drawColor);
 
         if (this.initialDraw) {
             this.initialDraw = false;
@@ -793,13 +802,13 @@ public class SketchFrame extends javax.swing.JFrame {
          */
         if (mouseHasMoved(evt)) {
 
-            g.setXORMode(xorColor);
-            g.drawLine(prevx, prevy, mousex, mousey);
+            myGraphics.setXORMode(xorColor);
+            myGraphics.drawLine(prevx, prevy, mousex, mousey);
 
             mousex = evt.getX();
             mousey = evt.getY();
 
-            g.drawLine(prevx, prevy, mousex, mousey);
+            myGraphics.drawLine(prevx, prevy, mousex, mousey);
         }
     }
 
@@ -813,15 +822,12 @@ public class SketchFrame extends javax.swing.JFrame {
 
     private void releaseRect(MouseEvent evt) {
         this.initialDraw = true;
-        Graphics g = jpnDraw.getGraphics();
-        g.setColor(drawColor);
-        g.drawRect(iniX, iniY, 0, 0);
+        myGraphics.setColor(drawColor);
+        myGraphics.drawRect(iniX, iniY, 0, 0);
 
     }
 
     private void drawBorracha(MouseEvent evt) {
-
-        Graphics g = this.jpnDraw.getGraphics();
 
         if (initialDraw) {
             this.initialDraw = false;
@@ -831,11 +837,11 @@ public class SketchFrame extends javax.swing.JFrame {
             this.prevx = mousex;
             this.prevy = mousey;
 
-            g.setColor(Color.white);
-            g.fillRect(mousex - diametroBorracha, mousey - diametroBorracha,
+            myGraphics.setColor(Color.white);
+            myGraphics.fillRect(mousex - diametroBorracha, mousey - diametroBorracha,
                     diametroBorracha * 2, diametroBorracha * 2);
-            g.setColor(Color.black);
-            g.drawRect(mousex - diametroBorracha, mousey - diametroBorracha,
+            myGraphics.setColor(Color.black);
+            myGraphics.drawRect(mousex - diametroBorracha, mousey - diametroBorracha,
                     diametroBorracha * 2, diametroBorracha * 2);
             prevx = mousex;
             prevy = mousey;
@@ -844,8 +850,8 @@ public class SketchFrame extends javax.swing.JFrame {
 
         if (mouseHasMoved(evt)) {
 
-            g.setColor(Color.white);
-            g.drawRect(prevx - diametroBorracha, prevy - diametroBorracha,
+            myGraphics.setColor(Color.white);
+            myGraphics.drawRect(prevx - diametroBorracha, prevy - diametroBorracha,
                     diametroBorracha * 2, diametroBorracha * 2);
 
             /* Get current mouse coordinates */
@@ -853,11 +859,11 @@ public class SketchFrame extends javax.swing.JFrame {
             mousey = evt.getY();
 
             /* Draw eraser block to panel */
-            g.setColor(Color.white);
-            g.fillRect(mousex - diametroBorracha, mousey - diametroBorracha,
+            myGraphics.setColor(Color.white);
+            myGraphics.fillRect(mousex - diametroBorracha, mousey - diametroBorracha,
                     diametroBorracha * 2, diametroBorracha * 2);
-            g.setColor(Color.black);
-            g.drawRect(mousex - diametroBorracha, mousey - diametroBorracha,
+            myGraphics.setColor(Color.black);
+            myGraphics.drawRect(mousex - diametroBorracha, mousey - diametroBorracha,
                     diametroBorracha * 2, diametroBorracha * 2);
             prevx = mousex;
             prevy = mousey;
@@ -867,9 +873,16 @@ public class SketchFrame extends javax.swing.JFrame {
 
     private void releaseBorracha(MouseEvent evt) {
         initialDraw = true;
-        Graphics g = jpnDraw.getGraphics();
-        g.setColor(Color.white);
-        g.drawRect(mousex - diametroBorracha, mousey - diametroBorracha,
+        myGraphics.setColor(Color.white);
+        myGraphics.drawRect(mousex - diametroBorracha, mousey - diametroBorracha,
                 diametroBorracha * 2, diametroBorracha * 2);
     }
+
+
+    public static void main(String args[]) {
+        SketchFrame f = new SketchFrame(null);
+        f.setVisible(true);
+
+    }
+
 }
