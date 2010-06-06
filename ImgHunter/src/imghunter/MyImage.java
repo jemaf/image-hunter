@@ -33,6 +33,12 @@ public class MyImage {
         this.calculaFrequencia();
 
     }
+   public void  testaFiltro() throws IOException{
+   Filtros teste = new Filtros(1);
+   teste.binarizacao(image, Color.GRAY.getRGB(), imgOriginal);
+   GerarTonsDeCinza();
+  // teste.filtroMaximo(image, 21, imgOriginal);
+   }
 
     /**
      * Gera os tons de cinza de uma imagem qualquer
@@ -54,6 +60,8 @@ public class MyImage {
 
         // ImageIO.write(grey, "jpg", new File());//salva a foto
     }//fim do GerarTonsDCinza
+
+
 
     public BufferedImage getImg() {
         return image;
