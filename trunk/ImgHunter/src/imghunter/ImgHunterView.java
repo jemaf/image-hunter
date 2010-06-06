@@ -141,6 +141,13 @@ public class ImgHunterView extends FrameView {
         BWMenuItem = new javax.swing.JMenuItem();
         equalizarImgMenu = new javax.swing.JMenuItem();
         buscarMenuItem = new javax.swing.JMenuItem();
+        jMenu1 = new javax.swing.JMenu();
+        binMenuItem = new javax.swing.JMenuItem();
+        mediaMenuItem = new javax.swing.JMenuItem();
+        medianaMenuItem = new javax.swing.JMenuItem();
+        maxMenuItem = new javax.swing.JMenuItem();
+        minMenuItem = new javax.swing.JMenuItem();
+        sobelMenuItem = new javax.swing.JMenuItem();
         HistogramaMenu = new javax.swing.JMenu();
         gerarHistMenuItem = new javax.swing.JMenuItem();
         javax.swing.JMenu helpMenu = new javax.swing.JMenu();
@@ -244,6 +251,58 @@ public class ImgHunterView extends FrameView {
 
         menuBar.add(imgMenu);
 
+        jMenu1.setText("Filtros");
+
+        binMenuItem.setText("Binarização");
+        binMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                binMenuItemActionPerformed(evt);
+            }
+        });
+        jMenu1.add(binMenuItem);
+
+        mediaMenuItem.setText("Média");
+        mediaMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mediaMenuItemActionPerformed(evt);
+            }
+        });
+        jMenu1.add(mediaMenuItem);
+
+        medianaMenuItem.setText("Mediana");
+        medianaMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                medianaMenuItemActionPerformed(evt);
+            }
+        });
+        jMenu1.add(medianaMenuItem);
+
+        maxMenuItem.setText("Máximo");
+        maxMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                maxMenuItemActionPerformed(evt);
+            }
+        });
+        jMenu1.add(maxMenuItem);
+
+        minMenuItem.setText("Mínimo");
+        minMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                minMenuItemActionPerformed(evt);
+            }
+        });
+        jMenu1.add(minMenuItem);
+
+        sobelMenuItem.setText("Sobel");
+        sobelMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                sobelMenuItemActionPerformed(evt);
+            }
+        });
+        jMenu1.add(sobelMenuItem);
+
+        menuBar.add(jMenu1);
+
         HistogramaMenu.setText("Histograma");
 
         gerarHistMenuItem.setText("Gerar Histograma");
@@ -282,7 +341,7 @@ public class ImgHunterView extends FrameView {
             .addGroup(statusPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(statusMessageLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 527, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 525, Short.MAX_VALUE)
                 .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(statusAnimationLabel)
@@ -371,7 +430,10 @@ public class ImgHunterView extends FrameView {
 
     private void BWMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BWMenuItemActionPerformed
         this.image.GerarTonsDeCinza();
-        ImageIcon icon = new ImageIcon(image.getImg());
+        //ajusta tamanho da imagem
+        Image img = MyImage.resizeImage(image.getImg(), jlblImg.getWidth(),
+                jlblImg.getHeight());
+        ImageIcon icon = new ImageIcon(img);
         jlblImg.setIcon(icon);
     }//GEN-LAST:event_BWMenuItemActionPerformed
 
@@ -387,22 +449,120 @@ public class ImgHunterView extends FrameView {
     private void buscarMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buscarMenuItemActionPerformed
         this.showOpcoesBusca();
     }//GEN-LAST:event_buscarMenuItemActionPerformed
+
+    private void binMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_binMenuItemActionPerformed
+        try {
+
+            int limiar = Integer.parseInt(JOptionPane.showInputDialog("Digite um valor par ao limiar"));
+            BufferedImage img = Filtros.binarizacao(this.image.getImg(), limiar, "binarizada");
+
+            //ajusta tamanho da imagem
+            Image img2 = MyImage.resizeImage(img, jlblImg.getWidth(), jlblImg.getHeight());
+            ImageIcon icon = new ImageIcon(img2);
+            jlblImg.setIcon(icon);
+
+        } catch (IOException ex) {
+            Logger.getLogger(ImgHunterView.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_binMenuItemActionPerformed
+
+    private void mediaMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mediaMenuItemActionPerformed
+        try {
+
+            //TODO: aplicar média!!
+
+            //ajusta tamanho da imagem
+//            Image img2 = MyImage.resizeImage(img, jlblImg.getWidth(), jlblImg.getHeight());
+//            ImageIcon icon = new ImageIcon(img2);
+//            jlblImg.setIcon(icon);
+
+        } catch (Exception ex) {
+            Logger.getLogger(ImgHunterView.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_mediaMenuItemActionPerformed
+
+    private void medianaMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_medianaMenuItemActionPerformed
+               try {
+
+            //TODO: aplicar mediana!!
+
+            //ajusta tamanho da imagem
+//            Image img2 = MyImage.resizeImage(img, jlblImg.getWidth(), jlblImg.getHeight());
+//            ImageIcon icon = new ImageIcon(img2);
+//            jlblImg.setIcon(icon);
+
+        } catch (Exception ex) {
+            Logger.getLogger(ImgHunterView.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_medianaMenuItemActionPerformed
+
+    private void maxMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_maxMenuItemActionPerformed
+             try {
+
+            //TODO: aplicar maxima!!
+
+            //ajusta tamanho da imagem
+//            Image img2 = MyImage.resizeImage(img, jlblImg.getWidth(), jlblImg.getHeight());
+//            ImageIcon icon = new ImageIcon(img2);
+//            jlblImg.setIcon(icon);
+
+        } catch (Exception ex) {
+            Logger.getLogger(ImgHunterView.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_maxMenuItemActionPerformed
+
+    private void minMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_minMenuItemActionPerformed
+               try {
+
+            //TODO: aplicar minima!!
+
+            //ajusta tamanho da imagem
+//            Image img2 = MyImage.resizeImage(img, jlblImg.getWidth(), jlblImg.getHeight());
+//            ImageIcon icon = new ImageIcon(img2);
+//            jlblImg.setIcon(icon);
+
+        } catch (Exception ex) {
+            Logger.getLogger(ImgHunterView.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_minMenuItemActionPerformed
+
+    private void sobelMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sobelMenuItemActionPerformed
+               try {
+
+            //TODO: aplicar sobel!!
+
+            //ajusta tamanho da imagem
+//            Image img2 = MyImage.resizeImage(img, jlblImg.getWidth(), jlblImg.getHeight());
+//            ImageIcon icon = new ImageIcon(img2);
+//            jlblImg.setIcon(icon);
+
+        } catch (Exception ex) {
+            Logger.getLogger(ImgHunterView.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_sobelMenuItemActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     javax.swing.JMenuItem BWMenuItem;
     javax.swing.JMenu HistogramaMenu;
     javax.swing.JMenu abrirImgMenu;
+    javax.swing.JMenuItem binMenuItem;
     javax.swing.JMenuItem buscarMenuItem;
     javax.swing.JMenuItem equalizarImgMenu;
     javax.swing.JMenuItem gerarHistMenuItem;
     javax.swing.JMenu imgMenu;
+    javax.swing.JMenu jMenu1;
     javax.swing.JFileChooser jfcimgChooser;
     public javax.swing.JLabel jlblHist;
     public javax.swing.JLabel jlblImg;
     javax.swing.JMenuItem loadImgMenuItem;
     javax.swing.JMenuItem loadSketchMenuItem;
     javax.swing.JPanel mainPanel;
+    javax.swing.JMenuItem maxMenuItem;
+    javax.swing.JMenuItem mediaMenuItem;
+    javax.swing.JMenuItem medianaMenuItem;
     javax.swing.JMenuBar menuBar;
+    javax.swing.JMenuItem minMenuItem;
     javax.swing.JProgressBar progressBar;
+    javax.swing.JMenuItem sobelMenuItem;
     java.awt.ScrollPane srclImgs;
     javax.swing.JLabel statusAnimationLabel;
     javax.swing.JLabel statusMessageLabel;
