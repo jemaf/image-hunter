@@ -34,10 +34,14 @@ public class MyImage {
 
     }
    public void  testaFiltro() throws IOException{
-   Filtros teste = new Filtros(1);
+
    GerarTonsDeCinza();
-   teste.binarizacao(image, Color.WHITE.getRGB(), imgOriginal);
-      teste.filtroMaximo(image, 3, imgOriginal);
+   Filtros.binarizacao(image, 177, imgOriginal);
+   Filtros.filtroMaximo(image, 3, imgOriginal);
+   Filtros.filtroMedia(image, 5, imgOriginal);
+   Filtros.filtroMinimo(image, 5, imgOriginal);
+   Filtros.filtroMediana(image, 5, imgOriginal);
+
    }
 
     /**
