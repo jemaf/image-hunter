@@ -229,21 +229,145 @@ public static BufferedImage filtroMedia(BufferedImage img, int maskSize,
 public static BufferedImage bordaSobel(BufferedImage img, String name) throws IOException{
    BufferedImage imgOut = new BufferedImage(
                img.getWidth(),img.getHeight(), BufferedImage.TYPE_INT_RGB);
+      
+        int [] img1d = umaDimensao(img);
+        float[] template = {-1, 0, 1, -2, 0, 2, -1, 0, 1};
+        float[] GY = new float[img.getWidth() * img.getHeight()];
+        float[] GX = new float[img.getWidth() * img.getHeight()];
+        int[] total = new int[img.getWidth() * img.getHeight()];
+        int[] output  = new int[img.getWidth() * img.getHeight()];
 
-  ImageIO.write(imgOut, "JPG", new File("_Med"+name));
+        int sum = 0;
+        int max = 0;
+
+        for (int x = 1; x < img.getWidth() - 2; x++) {
+            for (int y = 1; y < img.getHeight() - 2; y++) {
+                sum = 0;
+
+                for (int x1 = 0; x1 < 3; x1++) {
+                    for (int y1 = 0; y1 < 3; y1++) {
+                        int x2 = (x - 1 + x1);
+                        int y2 = (y - 1 + y1);
+                        float value = (img1d[y2 * img.getWidth() + x2] & 0xff) * (template[y1 * 3 + x1]);
+                        sum += value;
+                    }
+                }
+                GY[y * img.getWidth() + x] = sum;
+                for (int x1 = 0; x1 < 3; x1++) {
+                    for (int y1 = 0; y1 < 3; y1++) {
+                        int x2 = (x - 1 + x1);
+                        int y2 = (y - 1+ y1);
+                        float value = (img1d[y2 * img.getWidth() + x2] & 0xff) * (template[x1 * 3 + y1]);
+                        sum += value;
+                    }
+                }
+                GX[y * img.getWidth() + x] = sum;
+
+            }
+        }
+        for (int x = 0; x < img.getWidth(); x++) {
+            for (int y = 0; y < img.getHeight(); y++) {
+                total[y * img.getWidth() + x] = (int) Math.sqrt(GX[y * img.getWidth() + x] * GX[y * img.getWidth() + x] + GY[y * img.getWidth() + x] * GY[y * img.getWidth() + x]);
+                if (max < total[y * img.getWidth() + x])
+                    max = total[y * img.getWidth() + x];
+            }
+        }
+        float ratio = (float) max / 255;
+        for (int x = 0; x < img.getWidth(); x++) {
+            for (int y = 0; y < img.getHeight(); y++) {
+                sum = (int) (total[y * img.getWidth() + x] / ratio);
+                output[y * img.getWidth() + x] = 0xff000000 | ((int) sum << 16 | (int) sum << 8 | (int) sum);
+            }
+        }
+
+        imgOut = duasDimensoes(imgOut, output);
+  ImageIO.write(imgOut, "JPG", new File("_SOBEL"+name));
   return imgOut;
         }
 
 public static int [] umaDimensao(BufferedImage img){
-        int[] imagem = new int [img.getWidth() * img.getHeight()];
+
+    int[] imagem = new int [img.getWidth() * img.getHeight()];
         int cont = 0;
     for(int i  = 0; i <img.getWidth(); i++)
          for(int j  = 0; j <img.getHeight(); j++){
                 imagem[cont] = img.getRGB(i, j);
                     cont ++;
          }
-return imagem;
+    return imagem;
         }
+
+public static BufferedImage duasDimensoes(BufferedImage out, int [] imagem ){
+int cont = 0;
+for(int i = 0; i < out.getWidth(); i ++)
+    for(int j = 0; j< out.getHeight(); j++)
+    {   out.setRGB(i, j, imagem[cont]);
+      cont++;
+    }
+return out;
+}
+
+
+public static BufferedImage bordaPrewitt(BufferedImage img, String name) throws IOException{
+   BufferedImage imgOut = new BufferedImage(
+               img.getWidth(),img.getHeight(), BufferedImage.TYPE_INT_RGB);
+
+        int [] img1d = umaDimensao(img);
+        float[] template = {-1, 0, 1, -1, 0, 1, -1, 0, 1};
+        float[] GY = new float[img.getWidth() * img.getHeight()];
+        float[] GX = new float[img.getWidth() * img.getHeight()];
+        int[] total = new int[img.getWidth() * img.getHeight()];
+        int[] output  = new int[img.getWidth() * img.getHeight()];
+
+        int sum = 0;
+        int max = 0;
+
+        for (int x = 1; x < img.getWidth() - 2; x++) {
+            for (int y = 1; y < img.getHeight() - 2; y++) {
+                sum = 0;
+
+                for (int x1 = 0; x1 < 3; x1++) {
+                    for (int y1 = 0; y1 < 3; y1++) {
+                        int x2 = (x - 1 + x1);
+                        int y2 = (y - 1 + y1);
+                        float value = (img1d[y2 * img.getWidth() + x2] & 0xff) * (template[y1 * 3 + x1]);
+                        sum += value;
+                    }
+                }
+                GY[y * img.getWidth() + x] = sum;
+                for (int x1 = 0; x1 < 3; x1++) {
+                    for (int y1 = 0; y1 < 3; y1++) {
+                        int x2 = (x - 1 + x1);
+                        int y2 = (y - 1+ y1);
+                        float value = (img1d[y2 * img.getWidth() + x2] & 0xff) * (template[x1 * 3 + y1]);
+                        sum += value;
+                    }
+                }
+                GX[y * img.getWidth() + x] = sum;
+
+            }
+        }
+        for (int x = 0; x < img.getWidth(); x++) {
+            for (int y = 0; y < img.getHeight(); y++) {
+                total[y * img.getWidth() + x] = (int) Math.sqrt(GX[y * img.getWidth() + x] * GX[y * img.getWidth() + x] + GY[y * img.getWidth() + x] * GY[y * img.getWidth() + x]);
+                if (max < total[y * img.getWidth() + x])
+                    max = total[y * img.getWidth() + x];
+            }
+        }
+        float ratio = (float) max / 255;
+        for (int x = 0; x < img.getWidth(); x++) {
+            for (int y = 0; y < img.getHeight(); y++) {
+                sum = (int) (total[y * img.getWidth() + x] / ratio);
+                output[y * img.getWidth() + x] = 0xff000000 | ((int) sum << 16 | (int) sum << 8 | (int) sum);
+            }
+        }
+
+        imgOut = duasDimensoes(imgOut, output);
+  ImageIO.write(imgOut, "JPG", new File("_PREWWIT"+name));
+  return imgOut;
+        }
+
+
 }
 
 

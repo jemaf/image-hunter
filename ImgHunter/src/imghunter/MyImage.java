@@ -34,7 +34,8 @@ public class MyImage {
 
     }
    public void  testaFiltro() throws IOException{
-
+   Filtros.bordaSobel(image, imgOriginal);
+   Filtros.bordaPrewitt(image, imgOriginal);
    GerarTonsDeCinza();
    Filtros.binarizacao(image, 177, imgOriginal);
    Filtros.filtroMaximo(image, 3, imgOriginal);
