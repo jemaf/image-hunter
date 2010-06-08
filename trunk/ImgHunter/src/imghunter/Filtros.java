@@ -29,7 +29,10 @@ public class Filtros {
       BufferedImage imgOutMax = new BufferedImage(
                img.getWidth(),img.getHeight(), BufferedImage.TYPE_INT_RGB);
        int alt, larg;
-       ArrayList mascara = new ArrayList<Integer>();
+
+       ArrayList mascaraR = new ArrayList<Integer>();
+       ArrayList mascaraG = new ArrayList<Integer>();
+       ArrayList mascaraB = new ArrayList<Integer>();
        
 
        //perrcorrer a imagem;
@@ -42,22 +45,28 @@ public class Filtros {
                   for(int j = alt - maskSize/2; j<= alt + maskSize/2 ; j++){
                           if(i >= 0 && i < img.getWidth()){
                               if(j >= 0 && j < img.getHeight()){
-                                 mascara.add( new Color (img.getRGB(i,j)).getRed());
+                                 mascaraR.add( new Color (img.getRGB(i,j)).getRed());
+                                 mascaraG.add( new Color (img.getRGB(i,j)).getGreen());
+                                 mascaraB.add( new Color (img.getRGB(i,j)).getBlue());
                                  
                                 } 
                             }          
                         } 
                    }
             // ordena a mascara
-            Collections.sort(mascara);
+            Collections.sort(mascaraR);
+            Collections.sort(mascaraG);
+            Collections.sort(mascaraB);
            
             // grava no arquivo novo
-               Color c =  new Color((Integer)mascara.get(mascara.size()-1),
-                       (Integer)mascara.get(mascara.size()-1),(Integer)mascara.get(mascara.size()-1));
+               Color c =  new Color((Integer)mascaraR.get(mascaraR.size()-1),
+                       (Integer)mascaraG.get(mascaraG.size()-1),(Integer)mascaraB.get(mascaraB.size()-1));
            imgOutMax.setRGB(larg, alt,c.getRGB());
 
            // limpa pro próximo pixel
-           mascara.clear();
+           mascaraR.clear();
+           mascaraG.clear();
+           mascaraB.clear();
                   }
               }
         ImageIO.write(imgOutMax, "JPG", new File("_MAX"+name));
@@ -81,8 +90,10 @@ public static BufferedImage binarizacao(BufferedImage img, int limiar, String na
             for (int y = 0; y < imgOut.getHeight(); y++) {
 
                 Color c = new Color(img.getRGB(x, y));
-                int newColor = lut[c.getRed()];
-                c = new Color(newColor, newColor, newColor);
+                int newColorR = lut[c.getRed()];
+                int newColorG = lut[c.getGreen()];
+                int newColorB = lut[c.getBlue()];
+                c = new Color(newColorR, newColorG, newColorB);
                 imgOut.setRGB(x, y, c.getRGB());
 
             }
@@ -99,7 +110,9 @@ public static BufferedImage binarizacao(BufferedImage img, int limiar, String na
       BufferedImage imgOut = new BufferedImage(
                img.getWidth(),img.getHeight(), BufferedImage.TYPE_INT_RGB);
        int alt, larg;
-       ArrayList mascara = new ArrayList<Integer>();
+       ArrayList mascaraR = new ArrayList<Integer>();
+       ArrayList mascaraG = new ArrayList<Integer>();
+       ArrayList mascaraB = new ArrayList<Integer>();
 
 
        //perrcorrer a imagem;
@@ -113,22 +126,28 @@ public static BufferedImage binarizacao(BufferedImage img, int limiar, String na
                           if(i >= 0 && i < img.getWidth()){
                               if(j >= 0 && j < img.getHeight()){
                                  // if(i != larg && j != alt){
-                                    mascara.add( new Color (img.getRGB(i,j)).getRed());
+                                    mascaraR.add( new Color (img.getRGB(i,j)).getRed());
+                                    mascaraG.add( new Color (img.getRGB(i,j)).getGreen());
+                                    mascaraB.add( new Color (img.getRGB(i,j)).getBlue());
                                   //   }
                                 }
                             }
                         }
                    }
             // ordena a mascara
-            Collections.sort(mascara);
+            Collections.sort(mascaraR);
+            Collections.sort(mascaraG);
+            Collections.sort(mascaraB);
 
             // grava no arquivo novo
-               Color c =  new Color((Integer)mascara.get(0),
-                       (Integer)mascara.get(0),(Integer)mascara.get(0));
+               Color c =  new Color((Integer)mascaraR.get(0),
+                       (Integer)mascaraG.get(0),(Integer)mascaraB.get(0));
            imgOut.setRGB(larg, alt,c.getRGB());
 
            // limpa pro próximo pixel
-           mascara.clear();
+           mascaraR.clear();
+                      mascaraG.clear();
+                                 mascaraB.clear();
                   }
               }
         ImageIO.write(imgOut, "JPG", new File("_MIN"+name));
@@ -142,7 +161,10 @@ public static BufferedImage filtroMediana(BufferedImage img, int maskSize,
       BufferedImage imgOut = new BufferedImage(
                img.getWidth(),img.getHeight(), BufferedImage.TYPE_INT_RGB);
        int alt, larg;
-       ArrayList mascara = new ArrayList<Integer>();
+
+       ArrayList mascaraR = new ArrayList<Integer>();
+       ArrayList mascaraG = new ArrayList<Integer>();
+       ArrayList mascaraB = new ArrayList<Integer>();
 
 
        //perrcorrer a imagem;
@@ -155,22 +177,28 @@ public static BufferedImage filtroMediana(BufferedImage img, int maskSize,
                   for(int j = alt - maskSize/2; j<= alt + maskSize/2 ; j++){
                           if(i >= 0 && i < img.getWidth()){
                               if(j >= 0 && j < img.getHeight()){
-                                 mascara.add( new Color (img.getRGB(i,j)).getRed());
+                                 mascaraR.add( new Color (img.getRGB(i,j)).getRed());
+                                 mascaraG.add( new Color (img.getRGB(i,j)).getGreen());
+                                 mascaraB.add( new Color (img.getRGB(i,j)).getBlue());
                                   
                                 }
                             }
                         }
                    }
             // ordena a mascara
-            Collections.sort(mascara);
+            Collections.sort(mascaraR);
+            Collections.sort(mascaraG);
+            Collections.sort(mascaraB);
 
             // grava no arquivo novo
-               Color c =  new Color((Integer)mascara.get(mascara.size()/2),
-                       (Integer)mascara.get(mascara.size()/2),(Integer)mascara.get(mascara.size()/2));
+               Color c =  new Color((Integer)mascaraR.get(mascaraR.size()/2),
+                       (Integer)mascaraG.get(mascaraG.size()/2),(Integer)mascaraB.get(mascaraB.size()/2));
            imgOut.setRGB(larg, alt,c.getRGB());
 
            // limpa pro próximo pixel
-           mascara.clear();
+           mascaraR.clear();
+           mascaraG.clear();
+           mascaraB.clear();
                   }
               }
         ImageIO.write(imgOut, "JPG", new File("_Mediana"+name));
@@ -197,22 +225,28 @@ public static BufferedImage filtroMedia(BufferedImage img, int maskSize,
                   for(int j = alt - maskSize/2; j<= alt + maskSize/2 ; j++){
                           if(i >= 0 && i < img.getWidth()){
                               if(j >= 0 && j < img.getHeight()){
-                                 mascara.add( new Color (img.getRGB(i,j)).getRed());
+                                 mascara.add( new Color (img.getRGB(i,j)));
 
                                 }
                             }
                         }
                    }
               // descobrir o valor de NC médio
-              int media = 0;
+              int mediaR = 0;
+              int mediaG = 0;
+              int mediaB = 0;
               for(int t = 0; t < mascara.size(); t++)
-               { Color a = new Color( (Integer)mascara.get(t));
-                 media += a.getRed();
+               { Color a = (Color)mascara.get(t);
+                 mediaR += a.getRed();
+                 mediaG += a.getGreen();
+                 mediaB += a.getBlue();
                }
-              media /= mascara.size();
+              mediaR /= mascara.size();
+              mediaG /= mascara.size();
+              mediaB /= mascara.size();
+              
               // grava no arquivo novo
-               Color c =  new Color((Integer)mascara.get(media),
-                       (Integer)mascara.get(media),(Integer)mascara.get(media));
+               Color c =  new Color(mediaR,mediaG,mediaB);
            imgOut.setRGB(larg, alt,c.getRGB());
 
            // limpa pro próximo pixel

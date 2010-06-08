@@ -500,7 +500,7 @@ public class ImgHunterView extends FrameView {
         try {
             int maskTam = Integer.parseInt(JOptionPane.showInputDialog("Digite um valor para o "
                     + "tamanho da máscara"));
-            
+
             BufferedImage img = Filtros.filtroMaximo(this.image.getImg(), maskTam, "maxima");
             //ajusta tamanho da imagem
             Image img2 = MyImage.resizeImage(img, jlblImg.getWidth(), jlblImg.getHeight());
@@ -528,14 +528,13 @@ public class ImgHunterView extends FrameView {
 
     private void sobelMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sobelMenuItemActionPerformed
         try {
-//            int maskTam = Integer.parseInt(JOptionPane.showInputDialog("Digite um valor para o "
-//                    + "tamanho da máscara"));
 
-            //TODO: aplicar sobel!!
+            BufferedImage img = Filtros.bordaSobel(this.image.getImg(), "sobel");
+
             //ajusta tamanho da imagem
-//            Image img2 = MyImage.resizeImage(img, jlblImg.getWidth(), jlblImg.getHeight());
-//            ImageIcon icon = new ImageIcon(img2);
-//            jlblImg.setIcon(icon);
+            Image img2 = MyImage.resizeImage(img, jlblImg.getWidth(), jlblImg.getHeight());
+            ImageIcon icon = new ImageIcon(img2);
+            jlblImg.setIcon(icon);
         } catch (Exception ex) {
             Logger.getLogger(ImgHunterView.class.getName()).log(Level.SEVERE, null, ex);
         }
