@@ -69,7 +69,7 @@ public class Filtros {
 public static BufferedImage binarizacao(BufferedImage img, int limiar, String name) throws IOException
 {
 
-        int lut[] = new int[256];
+         int lut[] = new int[256];
 
         for(int i = 0; i < lut.length; i++)
            lut[i] = i < limiar ? 0: 255;
@@ -225,8 +225,25 @@ public static BufferedImage filtroMedia(BufferedImage img, int maskSize,
           }
 
 
+/*detectores de borda*/
+public static BufferedImage bordaSobel(BufferedImage img, String name) throws IOException{
+   BufferedImage imgOut = new BufferedImage(
+               img.getWidth(),img.getHeight(), BufferedImage.TYPE_INT_RGB);
 
+  ImageIO.write(imgOut, "JPG", new File("_Med"+name));
+  return imgOut;
+        }
 
+public static int [] umaDimensao(BufferedImage img){
+        int[] imagem = new int [img.getWidth() * img.getHeight()];
+        int cont = 0;
+    for(int i  = 0; i <img.getWidth(); i++)
+         for(int j  = 0; j <img.getHeight(); j++){
+                imagem[cont] = img.getRGB(i, j);
+                    cont ++;
+         }
+return imagem;
+        }
 }
 
 
