@@ -453,7 +453,7 @@ public class ImgHunterView extends FrameView {
     private void binMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_binMenuItemActionPerformed
         try {
 
-            int limiar = Integer.parseInt(JOptionPane.showInputDialog("Digite um valor par ao limiar"));
+            int limiar = Integer.parseInt(JOptionPane.showInputDialog("Digite um valor para o limiar"));
             BufferedImage img = Filtros.binarizacao(this.image.getImg(), limiar, "binarizada");
 
             //ajusta tamanho da imagem
@@ -468,74 +468,74 @@ public class ImgHunterView extends FrameView {
 
     private void mediaMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mediaMenuItemActionPerformed
         try {
+            int maskTam = Integer.parseInt(JOptionPane.showInputDialog("Digite um valor para o "
+                    + "tamanho da máscara"));
 
-            //TODO: aplicar média!!
-
+            BufferedImage img = Filtros.filtroMedia(this.image.getImg(), maskTam, "media");
             //ajusta tamanho da imagem
-//            Image img2 = MyImage.resizeImage(img, jlblImg.getWidth(), jlblImg.getHeight());
-//            ImageIcon icon = new ImageIcon(img2);
-//            jlblImg.setIcon(icon);
-
+            Image img2 = MyImage.resizeImage(img, jlblImg.getWidth(), jlblImg.getHeight());
+            ImageIcon icon = new ImageIcon(img2);
+            jlblImg.setIcon(icon);
         } catch (Exception ex) {
             Logger.getLogger(ImgHunterView.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_mediaMenuItemActionPerformed
 
     private void medianaMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_medianaMenuItemActionPerformed
-               try {
+        try {
+            int maskTam = Integer.parseInt(JOptionPane.showInputDialog("Digite um valor para o "
+                    + "tamanho da máscara"));
 
-            //TODO: aplicar mediana!!
-
+            BufferedImage img = Filtros.filtroMediana(this.image.getImg(), maskTam, "mediana");
             //ajusta tamanho da imagem
-//            Image img2 = MyImage.resizeImage(img, jlblImg.getWidth(), jlblImg.getHeight());
-//            ImageIcon icon = new ImageIcon(img2);
-//            jlblImg.setIcon(icon);
-
+            Image img2 = MyImage.resizeImage(img, jlblImg.getWidth(), jlblImg.getHeight());
+            ImageIcon icon = new ImageIcon(img2);
+            jlblImg.setIcon(icon);
         } catch (Exception ex) {
             Logger.getLogger(ImgHunterView.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_medianaMenuItemActionPerformed
 
     private void maxMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_maxMenuItemActionPerformed
-             try {
-
-            //TODO: aplicar maxima!!
-
+        try {
+            int maskTam = Integer.parseInt(JOptionPane.showInputDialog("Digite um valor para o "
+                    + "tamanho da máscara"));
+            
+            BufferedImage img = Filtros.filtroMaximo(this.image.getImg(), maskTam, "maxima");
             //ajusta tamanho da imagem
-//            Image img2 = MyImage.resizeImage(img, jlblImg.getWidth(), jlblImg.getHeight());
-//            ImageIcon icon = new ImageIcon(img2);
-//            jlblImg.setIcon(icon);
-
+            Image img2 = MyImage.resizeImage(img, jlblImg.getWidth(), jlblImg.getHeight());
+            ImageIcon icon = new ImageIcon(img2);
+            jlblImg.setIcon(icon);
         } catch (Exception ex) {
             Logger.getLogger(ImgHunterView.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_maxMenuItemActionPerformed
 
     private void minMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_minMenuItemActionPerformed
-               try {
+        try {
+            int maskTam = Integer.parseInt(JOptionPane.showInputDialog("Digite um valor para o "
+                    + "tamanho da máscara"));
 
-            //TODO: aplicar minima!!
-
+            BufferedImage img = Filtros.filtroMinimo(this.image.getImg(), maskTam, "minima");
             //ajusta tamanho da imagem
-//            Image img2 = MyImage.resizeImage(img, jlblImg.getWidth(), jlblImg.getHeight());
-//            ImageIcon icon = new ImageIcon(img2);
-//            jlblImg.setIcon(icon);
-
+            Image img2 = MyImage.resizeImage(img, jlblImg.getWidth(), jlblImg.getHeight());
+            ImageIcon icon = new ImageIcon(img2);
+            jlblImg.setIcon(icon);
         } catch (Exception ex) {
             Logger.getLogger(ImgHunterView.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_minMenuItemActionPerformed
 
     private void sobelMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sobelMenuItemActionPerformed
-               try {
+        try {
+//            int maskTam = Integer.parseInt(JOptionPane.showInputDialog("Digite um valor para o "
+//                    + "tamanho da máscara"));
 
             //TODO: aplicar sobel!!
-
             //ajusta tamanho da imagem
 //            Image img2 = MyImage.resizeImage(img, jlblImg.getWidth(), jlblImg.getHeight());
 //            ImageIcon icon = new ImageIcon(img2);
 //            jlblImg.setIcon(icon);
-
         } catch (Exception ex) {
             Logger.getLogger(ImgHunterView.class.getName()).log(Level.SEVERE, null, ex);
         }
