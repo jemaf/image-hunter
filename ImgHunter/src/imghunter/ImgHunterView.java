@@ -148,6 +148,8 @@ public class ImgHunterView extends FrameView {
         maxMenuItem = new javax.swing.JMenuItem();
         minMenuItem = new javax.swing.JMenuItem();
         sobelMenuItem = new javax.swing.JMenuItem();
+        prewittMenuItem = new javax.swing.JMenuItem();
+        robertsMenuItem = new javax.swing.JMenuItem();
         HistogramaMenu = new javax.swing.JMenu();
         gerarHistMenuItem = new javax.swing.JMenuItem();
         javax.swing.JMenu helpMenu = new javax.swing.JMenu();
@@ -300,6 +302,22 @@ public class ImgHunterView extends FrameView {
             }
         });
         jMenu1.add(sobelMenuItem);
+
+        prewittMenuItem.setText("Prewitt");
+        prewittMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                prewittMenuItemActionPerformed(evt);
+            }
+        });
+        jMenu1.add(prewittMenuItem);
+
+        robertsMenuItem.setText("Roberts");
+        robertsMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                robertsMenuItemActionPerformed(evt);
+            }
+        });
+        jMenu1.add(robertsMenuItem);
 
         menuBar.add(jMenu1);
 
@@ -529,6 +547,7 @@ public class ImgHunterView extends FrameView {
     private void sobelMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sobelMenuItemActionPerformed
         try {
 
+            this.image.GerarTonsDeCinza();
             BufferedImage img = Filtros.bordaSobel(this.image.getImg(), "sobel");
 
             //ajusta tamanho da imagem
@@ -539,6 +558,36 @@ public class ImgHunterView extends FrameView {
             Logger.getLogger(ImgHunterView.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_sobelMenuItemActionPerformed
+
+    private void prewittMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_prewittMenuItemActionPerformed
+        try {
+
+            this.image.GerarTonsDeCinza();
+            BufferedImage img = Filtros.bordaPrewitt(this.image.getImg(), "sobel");
+
+            //ajusta tamanho da imagem
+            Image img2 = MyImage.resizeImage(img, jlblImg.getWidth(), jlblImg.getHeight());
+            ImageIcon icon = new ImageIcon(img2);
+            jlblImg.setIcon(icon);
+        } catch (Exception ex) {
+            Logger.getLogger(ImgHunterView.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_prewittMenuItemActionPerformed
+
+    private void robertsMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_robertsMenuItemActionPerformed
+        try {
+
+            this.image.GerarTonsDeCinza();
+            BufferedImage img = Filtros.bordaRobert(this.image.getImg(), "sobel");
+
+            //ajusta tamanho da imagem
+            Image img2 = MyImage.resizeImage(img, jlblImg.getWidth(), jlblImg.getHeight());
+            ImageIcon icon = new ImageIcon(img2);
+            jlblImg.setIcon(icon);
+        } catch (Exception ex) {
+            Logger.getLogger(ImgHunterView.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_robertsMenuItemActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     javax.swing.JMenuItem BWMenuItem;
     javax.swing.JMenu HistogramaMenu;
@@ -560,7 +609,9 @@ public class ImgHunterView extends FrameView {
     javax.swing.JMenuItem medianaMenuItem;
     javax.swing.JMenuBar menuBar;
     javax.swing.JMenuItem minMenuItem;
+    javax.swing.JMenuItem prewittMenuItem;
     javax.swing.JProgressBar progressBar;
+    javax.swing.JMenuItem robertsMenuItem;
     javax.swing.JMenuItem sobelMenuItem;
     java.awt.ScrollPane srclImgs;
     javax.swing.JLabel statusAnimationLabel;
