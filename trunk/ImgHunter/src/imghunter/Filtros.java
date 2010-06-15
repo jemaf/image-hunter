@@ -392,6 +392,68 @@ public class Filtros {
         ImageIO.write(imgOut, "JPG", new File("_PREWWIT" + name));
         return imgOut;
     }
+
+
+
+     public static BufferedImage bordaRobert(BufferedImage img, String name) throws IOException {
+        BufferedImage imgOut = new BufferedImage(
+                img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_RGB);
+
+        int[] img1d = umaDimensao(img);
+        float[] template = {-1, 0, 0,1};
+        float[] GY = new float[img.getWidth() * img.getHeight()];
+        float[] GX = new float[img.getWidth() * img.getHeight()];
+        int[] total = new int[img.getWidth() * img.getHeight()];
+        int[] output = new int[img.getWidth() * img.getHeight()];
+
+        int sum = 0;
+        int max = 0;
+
+        for (int x = 0; x < img.getWidth() - 1; x++) {
+            for (int y = 0; y < img.getHeight() - 1; y++) {
+                sum = 0;
+
+                for (int x1 = 0; x1 < 2; x1++) {
+                    for (int y1 = 0; y1 < 2; y1++) {
+                        int x2 = (x  + x1);
+                        int y2 = (y  + y1);
+                        float value = (img1d[y2 * img.getWidth() + x2] & 0xff) * (template[y1 * 2 + x1]);
+                        sum += value;
+                    }
+                }
+                GY[y * img.getWidth() + x] = sum;
+                for (int x1 = 0; x1 < 2; x1++) {
+                    for (int y1 = 0; y1 < 2; y1++) {
+                        int x2 = (x + x1);
+                        int y2 = (y + y1);
+                        float value = (img1d[y2 * img.getWidth() + x2] & 0xff) * (template[x1 * 2 + y1]);
+                        sum += value;
+                    }
+                }
+                GX[y * img.getWidth() + x] = sum;
+
+            }
+        }
+        for (int x = 0; x < img.getWidth(); x++) {
+            for (int y = 0; y < img.getHeight(); y++) {
+                total[y * img.getWidth() + x] = (int) Math.sqrt(GX[y * img.getWidth() + x] * GX[y * img.getWidth() + x] + GY[y * img.getWidth() + x] * GY[y * img.getWidth() + x]);
+                if (max < total[y * img.getWidth() + x]) {
+                    max = total[y * img.getWidth() + x];
+                }
+            }
+        }
+        float ratio = (float) max / 255;
+        for (int x = 0; x < img.getWidth(); x++) {
+            for (int y = 0; y < img.getHeight(); y++) {
+                sum = (int) (total[y * img.getWidth() + x] / ratio);
+                output[y * img.getWidth() + x] = 0xff000000 | ((int) sum << 16 | (int) sum << 8 | (int) sum);
+            }
+        }
+
+        imgOut = duasDimensoes(imgOut, output);
+        ImageIO.write(imgOut, "JPG", new File("_ROBERT" + name));
+        return imgOut;
+    }
 }
 
 
